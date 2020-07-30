@@ -1,16 +1,49 @@
 from tkinter import *
+import tkinter as tk
 from PIL import Image, ImageTk
 # pillow (PIL) library used for jpeg image background compatibility with tkinter
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from pandas import DataFrame
+# matplotlib used for creating the graph and Pandas is used to display it
 
 
 # this is the function called when the "show my results" button is clicked
 def resultsButton():
     # results.insert() future use
     print('clicked')
+    displayGraph()
+
+# this is the function to update the graph with the output from the jar file
+def displayGraph():
+    yearlyAmounts = [100, 200, 300, 400, 500, 600, 100]
+    graph = Tk()
+    graph.title("Retirement Planner")
+    years= []
+    for i in range(len(yearlyAmounts)-1):
+        years.append(2020+i)
+    requiredSaving = yearlyAmounts.pop(len(yearlyAmounts) - 1)
+    data = {'Year':[],'Total Savings': []}
+
+    # Make the data the actual inputs
+    data.get('Year').extend(years)
+    data.get('Total Savings').extend(yearlyAmounts)
+
+    df = DataFrame(data, columns=['Year','Total Savings'])
+
+    figure1 = plt.Figure(figsize=(6,5),dpi=100)
+    ax1 = figure1.add_subplot(111)
+    line1 = FigureCanvasTkAgg(figure1, graph)
+    line1.get_tk_widget().pack(side=tk.LEFT,fill=tk.BOTH)
+    df = df[['Year','Total Savings']].groupby('Year').sum()
+    df.plot(kind='line', legend=True,ax=ax1,color='r',marker='o', fontsize=10)
+    ax1.set_title('Retirement Planner')
+    graph.mainloop()
+
 
 
 root = Tk()
-image = Image.open("Project/images/retirement4.jpg")
+image = Image.open("C:/Users/garvi/PycharmProjects/ITCS4102Project-master/images/retirement4.jpg") #need to change based on your file directory
 photo_image = ImageTk.PhotoImage(image)
 label = Label(root, image=photo_image)
 label.pack()
