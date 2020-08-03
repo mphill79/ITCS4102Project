@@ -25,20 +25,19 @@ def displayGraph(values):
     amounts = ''
     for line in jar_return_values.stdout:
         amounts = line.decode('utf-8')
-    print(amounts)
     yearlyAmounts = str(amounts).split(' ')
     graph = Tk()
     graph.title("Retirement Planner")
     years= []
     totalSavings = []
-    for i in range(len(yearlyAmounts)-1):
+    for i in range(len(yearlyAmounts)):
         years.append(2020+i)
-        totalSavings.append(int(yearlyAmounts[i]))
+        totalSavings.append(float(yearlyAmounts[i]))
     data = {'Year':[],'Total Savings': []}
 
     # Make the data the actual inputs
     data.get('Year').extend(years)
-    data.get('Total Savings').extend(yearlyAmounts)
+    data.get('Total Savings').extend(totalSavings)
 
     df = DataFrame(data, columns=['Year','Total Savings'])
 
