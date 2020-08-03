@@ -29,9 +29,10 @@ def displayGraph():
     yearlyAmounts.pop()
     years= []
     totalSavings = []
-    for i in range(len(yearlyAmounts)):
+    for i in range(len(yearlyAmounts)-1):
         years.append(2020+i)
         totalSavings.append(float(yearlyAmounts[i]))
+    results.insert(END, yearlyAmounts[len(yearlyAmounts) - 1])
     data = {'Year':[],'Total Savings': []}
 
     # Make the data the actual inputs
