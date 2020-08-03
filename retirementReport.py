@@ -12,22 +12,21 @@ from typing import Any, Union
 # this is the function called when the "show my results" button is clicked
 def resultsButton():
     # results.insert() future use
-    values = ''
-    values = values + currentAgeInput.get() + ' '
-    values = values + grossIncomeInput.get() + ' '
-    values = values + savingsInput.get()+ ' '
-    values = values + expensesInput.get()+ ' '
-    displayGraph(values)
+    displayGraph()
 
 # this is the function to update the graph with the output from the jar file
-def displayGraph(values):
-    jar_return_values = Popen(['java', '-jar', 'FinalProject.jar', str(values)], stdout=PIPE, stderr=STDOUT)
+def displayGraph():
+    jar_return_values = Popen(['java', '-jar', 'FinalProject.jar', currentAgeInput.get(), grossIncomeInput.get(), savingsInput.get(), expensesInput.get()], stdout=PIPE, stderr=STDOUT)
     amounts = ''
+    #amounts = '100 200 300 400 500 600 '
     for line in jar_return_values.stdout:
         amounts = line.decode('utf-8')
     yearlyAmounts = str(amounts).split(' ')
+    for amount in yearlyAmounts:
+        amount.strip()
     graph = Tk()
     graph.title("Retirement Planner")
+    yearlyAmounts.pop()
     years= []
     totalSavings = []
     for i in range(len(yearlyAmounts)):
