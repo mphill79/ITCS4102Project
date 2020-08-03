@@ -22,7 +22,10 @@ def resultsButton():
 # this is the function to update the graph with the output from the jar file
 def displayGraph(values):
     jar_return_values = Popen(['java', '-jar', 'FinalProject.jar', str(values)], stdout=PIPE, stderr=STDOUT)
-    amounts = jar_return_values.stdout.readline()
+    amounts = ''
+    for line in jar_return_values.stdout:
+        amounts = line.decode('utf-8')
+    print(amounts)
     yearlyAmounts = str(amounts).split(' ')
     graph = Tk()
     graph.title("Retirement Planner")
