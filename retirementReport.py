@@ -6,23 +6,31 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from pandas import DataFrame
 # matplotlib used for creating the graph and Pandas is used to display it
-
+from subprocess import Popen, PIPE, STDOUT
+from typing import Any, Union
 
 # this is the function called when the "show my results" button is clicked
 def resultsButton():
     # results.insert() future use
-    print('clicked')
-    displayGraph()
+    values = ''
+    values = values + currentAgeInput.get() + ' '
+    values = values + grossIncomeInput.get() + ' '
+    values = values + savingsInput.get()+ ' '
+    values = values + expensesInput.get()+ ' '
+    displayGraph(values)
 
 # this is the function to update the graph with the output from the jar file
-def displayGraph():
-    yearlyAmounts = [100, 200, 300, 400, 500, 600, 100]
+def displayGraph(values):
+    jar_return_values = Popen(['java', '-jar', 'FinalProject.jar', str(values)], stdout=PIPE, stderr=STDOUT)
+    amounts = jar_return_values.stdout.readline()
+    yearlyAmounts = str(amounts).split(' ')
     graph = Tk()
     graph.title("Retirement Planner")
     years= []
+    totalSavings = []
     for i in range(len(yearlyAmounts)-1):
         years.append(2020+i)
-    requiredSaving = yearlyAmounts.pop(len(yearlyAmounts) - 1)
+        totalSavings.append(int(yearlyAmounts[i]))
     data = {'Year':[],'Total Savings': []}
 
     # Make the data the actual inputs
