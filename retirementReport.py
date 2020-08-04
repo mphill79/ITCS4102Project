@@ -7,18 +7,20 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from pandas import DataFrame
 # matplotlib used for creating the graph and Pandas is used to display it
 from subprocess import Popen, PIPE, STDOUT
-from typing import Any, Union
+
 
 # this is the function called when the "show my results" button is clicked
 def resultsButton():
-    # results.insert() future use
     displayGraph()
+
 
 # this is the function to update the graph with the output from the jar file
 def displayGraph():
-    jar_return_values = Popen(['java', '-jar', 'FinalProject.jar', currentAgeInput.get(), grossIncomeInput.get(), savingsInput.get(), expensesInput.get()], stdout=PIPE, stderr=STDOUT)
+    jar_return_values = Popen(
+        ['java', '-jar', 'FinalProject.jar', currentAgeInput.get(), grossIncomeInput.get(), savingsInput.get(),
+         expensesInput.get()], stdout=PIPE, stderr=STDOUT)
     amounts = ''
-    #amounts = '100 200 300 400 500 600 '
+    # amounts = '100 200 300 400 500 600 '
     for line in jar_return_values.stdout:
         amounts = line.decode('utf-8')
     yearlyAmounts = str(amounts).split(' ')
@@ -27,94 +29,86 @@ def displayGraph():
     graph = Tk()
     graph.title("Retirement Planner")
     yearlyAmounts.pop()
-    years= []
+    years = []
     totalSavings = []
-    for i in range(len(yearlyAmounts)-1):
-        years.append(2020+i)
+    for i in range(len(yearlyAmounts) - 1):
+        years.append(2020 + i)
         totalSavings.append(float(yearlyAmounts[i]))
     results.insert(END, yearlyAmounts[len(yearlyAmounts) - 1])
-    data = {'Year':[],'Total Savings': []}
+    data = {'Year': [], 'Total Savings': []}
 
     # Make the data the actual inputs
     data.get('Year').extend(years)
     data.get('Total Savings').extend(totalSavings)
 
-    df = DataFrame(data, columns=['Year','Total Savings'])
+    df = DataFrame(data, columns=['Year', 'Total Savings'])
 
-    figure1 = plt.Figure(figsize=(6,5),dpi=100)
+    figure1 = plt.Figure(figsize=(6, 5), dpi=100)
     ax1 = figure1.add_subplot(111)
     line1 = FigureCanvasTkAgg(figure1, graph)
-    line1.get_tk_widget().pack(side=tk.LEFT,fill=tk.BOTH)
-    df = df[['Year','Total Savings']].groupby('Year').sum()
-    df.plot(kind='line', legend=True,ax=ax1,color='r',marker='o', fontsize=10)
+    line1.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
+    df = df[['Year', 'Total Savings']].groupby('Year').sum()
+    df.plot(kind='line', legend=True, ax=ax1, color='r', marker='o', fontsize=10)
     ax1.set_title('Retirement Planner')
     graph.mainloop()
 
 
-
 root = Tk()
-image = Image.open("C:/Users/garvi/PycharmProjects/ITCS4102Project-master/images/retirement4.jpg") #need to change based on your file directory
+image = Image.open(
+    "Project/images/retirement4.jpg")
+# need to change based on your file directory for image
 photo_image = ImageTk.PhotoImage(image)
 label = Label(root, image=photo_image)
 label.pack()
 # This is the section of code which creates the main window
-root.geometry('800x500')
-# root.resizable(0, 0)
-root.configure(background='#7FFFD4')
+root.geometry('870x550')
+root.resizable(0, 0)
 root.title('Retirement Report')
 
 # Creates label to give user direction
-Label(root, text='Please Answer The Questions Below.', bg='#7FFFD4', font=('courier', 12, 'normal')).place(x=8, y=9)
+Label(root, text='Please Answer The Questions Below.', bg='gray90', font=('courier', 12, 'normal')).place(x=8, y=9)
 
 # Creates current age label
-Label(root, text='Current Age:', bg='#7FFFD4', font=('courier', 10, 'normal')).place(x=8, y=39)
+Label(root, text='Current Age:', bg='gray90', font=('courier', 10, 'normal')).place(x=8, y=49)
 
 # Accepts current age input
 currentAgeInput = StringVar()
 currentAgeInput = Entry(root, textvariable=currentAgeInput)
-currentAgeInput.place(x=118, y=39)
-
-# Creates goal retirement age label
-Label(root, text='Goal Retirement Age:', bg='#7FFFD4', font=('courier', 10, 'normal')).place(x=8, y=69)
-
-# Accepts retirement age input
-retirementAgeInput = StringVar()
-retirementAgeInput = Entry(root, textvariable=retirementAgeInput)
-retirementAgeInput.place(x=188, y=69)
+currentAgeInput.place(x=113, y=49)
 
 # Creates gross income label
-Label(root, text='Annual Gross Income:', bg='#7FFFD4', font=('courier', 10, 'normal')).place(x=8, y=99)
+Label(root, text='Annual Gross Income:', bg='gray90', font=('courier', 10, 'normal')).place(x=8, y=89)
 
 # Accepts gross income input
 grossIncomeInput = StringVar()
 grossIncomeInput = Entry(root, textvariable=grossIncomeInput)
-grossIncomeInput.place(x=188, y=99)
+grossIncomeInput.place(x=180, y=89)
 
 # Creates total amount in savings label
-Label(root, text='Total Amount In Savings:', bg='#7FFFD4', font=('courier', 10, 'normal')).place(x=8, y=129)
+Label(root, text='Total Amount In Savings:', bg='gray90', font=('courier', 10, 'normal')).place(x=8, y=129)
 
 # accepts savings input
 savingsInput = StringVar()
 savingsInput = Entry(root, textvariable=savingsInput)
-savingsInput.place(x=218, y=129)
+savingsInput.place(x=210, y=129)
 
 # creates annual expenses label
-Label(root, text='Average Annual Expenses:', bg='#7FFFD4', font=('courier', 10, 'normal')).place(x=8, y=159)
+Label(root, text='Average Annual Expenses:', bg='gray90', font=('courier', 10, 'normal')).place(x=8, y=169)
 
 # accepts annual expenses text entry
 expensesInput = StringVar()
 expensesInput = Entry(root, textvariable=expensesInput)
-expensesInput.place(x=218, y=159)
+expensesInput.place(x=211, y=169)
 
 # creates results label
-Label(root, text='Results:', bg='#7FFFD4', font=('courier', 12, 'normal')).place(x=8, y=261)
+Label(root, text='Estimated Retirement Age:', bg='gray90', font=('courier', 10, 'normal')).place(x=8, y=269)
 
 # text box for displaying results
-results = Text(root, height=7, width=20)
-results.place(x=98, y=269)
+results = Text(root, height=2, width=15)
+results.place(x=218, y=269)
 
 # creates results button, calls resultsButton() function
-Button(root, text='Display My Results!', bg='#FAEBD7', font=('courier', 12, 'normal'),
-       command=resultsButton).place(x=8, y=199)
+Button(root, text='Display My Results!', bg='wheat2', font=('courier', 12, 'bold'),
+       command=resultsButton).place(x=8, y=215)
 
 root.mainloop()
