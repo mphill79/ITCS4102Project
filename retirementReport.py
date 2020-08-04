@@ -55,8 +55,8 @@ def displayGraph():
 
 root = Tk()
 image = Image.open(
-    "Project/images/retirement4.jpg")
-# need to change based on your file directory for image
+    "retirement4.jpg")
+# file directory for image
 photo_image = ImageTk.PhotoImage(image)
 label = Label(root, image=photo_image)
 label.pack()
